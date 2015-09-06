@@ -1,0 +1,155 @@
+'use strict';
+
+var FastOrderdSet = require('../');
+// var OrderedSet = require('ordered-set'); // doesn't work
+var SetLib = require('set');
+var AbstractSet = require('abstract-set');
+var SetJs = require('set-js');
+var equalityFunction = function(a,b){return a == b;};
+var lesserFunction = function(a,b){return a < b;};
+var SpecializedSet = require('specialized-set')(equalityFunction, lesserFunction);
+var SetCollection = require('set-collection');
+var assert = require('assert');
+var factories = [];
+var initial5 =  Array.apply(null, {length: 5}).map(Number.call, Number);
+var initial50 = Array.apply(null, {length: 50}).map(Number.call, Number);
+
+var fastOrderedSetEmpty = new FastOrderdSet();
+var fastOrderedSet5 = new FastOrderdSet(initial5);
+var fastOrderedSet50 = new FastOrderdSet(initial50);
+
+factories.push({
+  name: 'fast-ordered-set',
+  create: function fastOrderedSet() {
+    return new FastOrderdSet();
+  },
+  create5: function fastOrderedSet() {
+    return new FastOrderdSet(initial5);
+  },
+  create50: function fastOrderedSet() {
+    return new FastOrderdSet(initial50);
+  },
+
+  hasEmpty: function() {
+    return fastOrderedSetEmpty.has('missing');
+  },
+  hasHit5: function() {
+    return fastOrderedSet5.has(3);
+  },
+  hasMiss5: function() {
+    return fastOrderedSet5.has(10);
+  },
+  hasHit50: function() {
+    return fastOrderedSet50.has(40);
+  },
+  hasMiss50: function() {
+    return fastOrderedSet50.has(51);
+  }
+});
+
+factories.push({
+  name: 'es2015',
+  create: function es2015() {
+    return new Set();
+  },
+  create5: function es2015() {
+    return new Set(initial5);
+  },
+  create50: function es2015() {
+    return new Set(initial50);
+  }
+});
+
+factories.push({
+  name: 'set',
+  create: function setLib() {
+    return new SetLib();
+  },
+  create5: function setLib() {
+    return new SetLib(initial5);
+  },
+  create50: function setLib() {
+    return new SetLib(initial50);
+  }
+});
+
+factories.push({
+  name: 'set-js',
+  create: function setJs() {
+    return new SetJs();
+  },
+  create5: function setJs() {
+    return new SetJs(initial5);
+  },
+  create50: function setJs() {
+    return new SetJs(initial50);
+  }
+});
+
+factories.push({
+  name: 'specialized-set',
+  create: function specializedSet() {
+    return new SpecializedSet();
+  },
+  create5: function specializedSet() {
+    return new SpecializedSet(initial5);
+  },
+  create50: function specializedSet() {
+    return new SpecializedSet(initial50);
+  },
+});
+
+factories.push({
+  name: 'set-collection',
+  create: function setCollection() {
+    return new SetCollection();
+  },
+  create5: function setCollection() {
+    return new SetCollection(initial5);
+  },
+  create50: function setCollection() {
+    return new SetCollection(initial50);
+  }
+});
+
+
+module.exports = {
+  all: factories,
+  byName: byName,
+  byTest: byTest
+};
+
+function byName(name) {
+  return factories.filter(function(f) {
+    return f.name === name;
+  })[0];
+}
+
+function byTest(name) {
+  return factories.map(function(f) {
+    return {
+      name: f.name,
+      fn:   f[name]
+    };
+  });
+}
+
+
+assert.equal(byName('fast-ordered-set').create().size, 0);
+assert.equal(byName('es2015').create().size, 0);
+// is currently broken...
+//assert(orderedSet() instanceof OrderedSet);
+assert.equal(byName('set').create().size(), 0);
+assert.equal(byName('set-js').create().size(), 0);
+assert.equal(byName('specialized-set').create().size, 0);
+assert.equal(byName('set-collection').create().count, 0);
+
+assert.equal(byName('fast-ordered-set').create5().size, 5);
+assert.equal(byName('es2015').create5().size, 5);
+// is currently broken...
+//assert(orderedSet() instanceof OrderedSet);
+assert.equal(byName('set').create5().size(), 5);
+assert.equal(byName('set-js').create5().size(), 5);
+assert.equal(byName('specialized-set').create5().size, 5);
+assert.equal(byName('set-collection').create5().count, 5);
+
