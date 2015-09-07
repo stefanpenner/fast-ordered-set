@@ -2,5 +2,5 @@
 
 var factories = require('./factories');
 
-console.log('[alloc-with-initial-value.size = 5]');
-require('do-you-even-bench')(factories.byTest('create5'));
+console.log('[has-empty]');
+require('do-you-even-bench')(factories.byTest('hasEmpty'));

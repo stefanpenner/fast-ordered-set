@@ -36,16 +36,17 @@ factories.push({
   hasHit5: function() {
     return fastOrderedSet5.has(3);
   },
-  hasMiss5: function() {
-    return fastOrderedSet5.has(10);
-  },
   hasHit50: function() {
-    return fastOrderedSet50.has(40);
+    return fastOrderedSet50.has(25);
   },
   hasMiss50: function() {
     return fastOrderedSet50.has(51);
   }
 });
+
+var es2015OrderedSetEmpty = new Set();
+var es2015OrderedSet5 = new Set(initial5);
+var es2015OrderedSet50 = new Set(initial50);
 
 factories.push({
   name: 'es2015',
@@ -57,8 +58,24 @@ factories.push({
   },
   create50: function es2015() {
     return new Set(initial50);
+  },
+  hasEmpty: function() {
+    return es2015OrderedSetEmpty.has('missing');
+  },
+  hasHit5: function() {
+    return es2015OrderedSet5.has(3);
+  },
+  hasHit50: function() {
+    return es2015OrderedSet50.has(25);
+  },
+  hasMiss50: function() {
+    return es2015OrderedSet50.has(51);
   }
 });
+
+var setLibEmpty = new SetLib();
+var setLibHit5 = new SetLib(initial5);
+var setLibHit50 = new SetLib(initial50);
 
 factories.push({
   name: 'set',
@@ -70,8 +87,27 @@ factories.push({
   },
   create50: function setLib() {
     return new SetLib(initial50);
+  },
+  hasEmpty: function() {
+    return setLibEmpty.has('missing');
+  },
+  hasHit5: function() {
+    return setLibHit5.has(3);
+  },
+  hasHit50: function() {
+    return setLibHit50.has(25);
+  },
+  hasEmpty: function() {
+    return setLibEmpty.has('missing');
+  },
+  hasMiss50: function() {
+    return setLibHit50.has(51);
   }
 });
+
+var setJsEmpty = new SetJs();
+var setJsHit5 = new SetJs(initial5);
+var setJsHit50 = new SetJs(initial50);
 
 factories.push({
   name: 'set-js',
@@ -83,8 +119,24 @@ factories.push({
   },
   create50: function setJs() {
     return new SetJs(initial50);
+  },
+  hasEmpty: function() {
+    return setJsEmpty.has('missing');
+  },
+  hasHit5: function() {
+    return setJsHit5.has(3);
+  },
+  hasHit50: function() {
+    return setJsHit5.has(25);
+  },
+  hasMiss50: function() {
+    return setJsHit5.has(51);
   }
 });
+
+var specializedSetEmpty = new SpecializedSet();
+var specializedSetHit5 = new SpecializedSet(initial5);
+var specializedSetHit50 = new SpecializedSet(initial50);
 
 factories.push({
   name: 'specialized-set',
@@ -97,7 +149,23 @@ factories.push({
   create50: function specializedSet() {
     return new SpecializedSet(initial50);
   },
+  hasEmpty: function() {
+    return specializedSetEmpty.has('missing');
+  },
+  hasHit5: function() {
+    return specializedSetHit5.has(3);
+  },
+  hasHit50: function() {
+    return specializedSetHit50.has(25);
+  },
+  hasMiss50: function() {
+    return specializedSetHit50.has(50);
+  }
 });
+
+var setCollectionEmpty = new SetCollection();
+var setCollectionHit5  = new SetCollection(initial5);
+var setCollectionHit50  = new SetCollection(initial50);
 
 factories.push({
   name: 'set-collection',
@@ -109,9 +177,20 @@ factories.push({
   },
   create50: function setCollection() {
     return new SetCollection(initial50);
+  },
+  hasEmpty: function() {
+    return setCollectionEmpty.has('missing');
+  },
+  hasHit5: function() {
+    return setCollectionHit5.has(3);
+  },
+  hasHit50: function() {
+    return setCollectionHit50.has(25);
+  },
+  hasMiss50: function() {
+    return setCollectionHit50.has(51);
   }
 });
-
 
 module.exports = {
   all: factories,
@@ -127,13 +206,17 @@ function byName(name) {
 
 function byTest(name) {
   return factories.map(function(f) {
-    return {
-      name: f.name,
-      fn:   f[name]
-    };
+    var copy = { };
+
+    for (var prop in f) {
+      copy[prop] = f[prop];
+    }
+
+    copy.fn = f[name];
+
+    return copy;
   });
 }
-
 
 assert.equal(byName('fast-ordered-set').create().size, 0);
 assert.equal(byName('es2015').create().size, 0);

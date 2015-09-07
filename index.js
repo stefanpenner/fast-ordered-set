@@ -46,7 +46,9 @@ Set.prototype._brand  = function getId(obj) {
 };
 
 Set.prototype.has = function(obj, id) {
-  return (this._map && this.map[ arguments.length > 1 ? id : this._getId(obj)]) !== undefined;
+  if (this._map === undefined) { return false; }
+
+  return this.map[ arguments.length > 1 ? arguments[1] : this._getId(obj)] !== undefined;
 };
 
 Set.prototype.intersection = function(set) {
