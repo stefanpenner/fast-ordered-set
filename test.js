@@ -84,7 +84,7 @@ describe('FastOrderedSet', function() {
     });
   });
 
-  describe('add()', function() {
+  describe('#add', function() {
     beforeEach(function() {
       obj.add(1);
     });
@@ -102,7 +102,7 @@ describe('FastOrderedSet', function() {
     });
   });
 
-  describe('delete()', function() {
+  describe('#delete', function() {
 
     beforeEach(function() {
       obj = new FastOrderedSet([1,2,3,2,2,1,3]);
@@ -124,7 +124,7 @@ describe('FastOrderedSet', function() {
     });
   });
 
-  describe('union()', function() {
+  describe('#union', function() {
     var setOne, setTwo;
 
     beforeEach(function () {
@@ -181,7 +181,7 @@ describe('FastOrderedSet', function() {
     });
   });
 
-  describe('intersection()', function() {
+  describe('#intersection', function() {
     var setOne, setTwo;
 
     beforeEach(function () {
@@ -255,7 +255,7 @@ describe('FastOrderedSet', function() {
     });
   });
 
-  describe('difference()', function () {
+  describe('#difference', function () {
     var setOne, setTwo, diff1, diff2;
 
     beforeEach(function () {
@@ -306,7 +306,7 @@ describe('FastOrderedSet', function() {
     });
 
 
-    describe('delete()', function() {
+    describe('#delete', function() {
 
       beforeEach(function () {
         retVal = setOne.delete(1);
@@ -322,7 +322,7 @@ describe('FastOrderedSet', function() {
       });
     });
 
-    describe('add()', function() {
+    describe('#add', function() {
 
       beforeEach(function() {
         retVal = setOne.add(5);
