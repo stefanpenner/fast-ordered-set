@@ -112,6 +112,12 @@ Set.prototype.difference = function (values) {
   return result;
 };
 
+Set.prototype.subtract = function (values) {
+  var result = new this.constructor(this.values.slice());
+  result.deleteAll(values);
+  return result;
+};
+
 Set.prototype.forEach = function(_cb, binding) {
   if (this._values === undefined) { return; }
 

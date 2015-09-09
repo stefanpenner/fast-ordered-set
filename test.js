@@ -297,6 +297,49 @@ describe('FastOrderedSet', function() {
     });
   });
 
+  describe('#subtract', function () {
+    var setOne, setTwo, diff1, diff2;
+
+    beforeEach(function () {
+      setOne = new FastOrderedSet([1,2,3]);
+      setTwo = new FastOrderedSet([1,2,3,4]);
+      diff1 = setOne.subtract(setTwo);
+      diff2 = setTwo.subtract(setOne);
+    });
+
+    it('returns a FastOrderedSet', function() {
+      expect(diff1 instanceof FastOrderedSet).to.be.true;
+    });
+
+    it('returns the difference between the sets', function() {
+      expect(diff1.size).to.be.eql(0);
+      expect(diff2.size).to.be.eql(1);
+      expect(diff2.values).to.be.eql([4]);
+    });
+
+    it('is NOT commutative', function() {
+      expect(diff1.values).to.not.be.eql(diff2.values);
+    });
+
+    describe('the subtraction between two identical sets', function() {
+      var setThree, setFour, diff3;
+
+      beforeEach(function() {
+        setThree = new FastOrderedSet(['a','b','c']);
+        setFour = new FastOrderedSet(['b','c','a']);
+        diff3 = setThree.subtract(setFour);
+      });
+
+      it('returns a FastOrderedSet', function() {
+        expect(diff3 instanceof FastOrderedSet).to.be.true;
+      });
+
+      it('has size() of zero', function() {
+        expect(diff3.size).to.be.eql(0);
+      });
+    });
+  });
+
   describe('method chaining', function() {
     var setOne, setTwo, retVal;
 
