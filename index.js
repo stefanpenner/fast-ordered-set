@@ -104,7 +104,7 @@ Set.prototype.deleteAll = function (values) {
   return this;
 };
 
-Set.prototype.difference = function (values) {
+Set.prototype.xor = function (values) {
   var input = values instanceof this.constructor ? values.values.slice() : values;
   var result = new this.constructor(input, this.__id__);
   for (var i = 0; i < this.values.length; i++) {
@@ -118,7 +118,7 @@ Set.prototype.difference = function (values) {
   return result;
 };
 
-Set.prototype.subtract = function (values) {
+Set.prototype.difference = Set.prototype.subtract = function (values) {
   var result = new this.constructor(this.values.slice(), this.__id__);
   result.deleteAll(values);
   return result;

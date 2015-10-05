@@ -275,6 +275,62 @@ describe('FastOrderedSet', function() {
     });
   });
 
+  describe('#xor', function () {
+    var setOne, setTwo, diff1, diff2;
+
+    beforeEach(function () {
+      setOne = new FastOrderedSet([1,2,3]);
+      setTwo = new FastOrderedSet([1,2,3,4]);
+      diff1 = setOne.xor(setTwo);
+      diff2 = setTwo.xor(setOne);
+    });
+
+    it('returns a FastOrderedSet', function() {
+      expect(diff1 instanceof FastOrderedSet).to.be.true;
+    });
+
+    it('returns the xor between the sets', function() {
+      expect(diff1.size).to.be.eql(1);
+      expect(diff1.has(4)).to.be.true;
+    });
+
+    it('is commutative', function() {
+      expect(diff1.values).to.be.eql(diff2.values);
+    });
+
+    describe('the xor between two identical sets', function() {
+      var setThree, setFour, diff3;
+
+      beforeEach(function() {
+        setThree = new FastOrderedSet(['a','b','c']);
+        setFour = new FastOrderedSet(['b','c','a']);
+        diff3 = setThree.xor(setFour);
+      });
+
+      it('returns a FastOrderedSet', function() {
+        expect(diff3 instanceof FastOrderedSet).to.be.true;
+      });
+
+      it('has size() of zero', function() {
+        expect(diff3.size).to.be.eql(0);
+      });
+    });
+
+    describe('using a custom id', function() {
+      beforeEach( function() {
+        setOne = new FastOrderedSet([{myId: 1, v: 'alpha'}, {myId: 2, v: 'beta'}], 'myId');
+        setTwo = new FastOrderedSet([{myId: 1, v: 'charlie'}, {myId: 3, v: 'delta'}], 'myId');
+      });
+
+      it('propagates the id', function() {
+        var result = setOne.xor(setTwo);
+        expect(result.values.map(function (value) {
+          return value.v;
+        })).to.deep.equal(['delta', 'beta']);
+      });
+    });
+  });
+
   describe('#difference', function () {
     var setOne, setTwo, diff1, diff2;
 
@@ -290,15 +346,16 @@ describe('FastOrderedSet', function() {
     });
 
     it('returns the difference between the sets', function() {
-      expect(diff1.size).to.be.eql(1);
-      expect(diff1.has(4)).to.be.true;
+      expect(diff1.size).to.be.eql(0);
+      expect(diff2.size).to.be.eql(1);
+      expect(diff2.values).to.be.eql([4]);
     });
 
-    it('is commutative', function() {
-      expect(diff1.values).to.be.eql(diff2.values);
+    it('is NOT commutative', function() {
+      expect(diff1.values).to.not.be.eql(diff2.values);
     });
 
-    describe('the difference between two identical sets', function() {
+    describe('the set difference between two identical sets', function() {
       var setThree, setFour, diff3;
 
       beforeEach(function() {
@@ -324,63 +381,6 @@ describe('FastOrderedSet', function() {
 
       it('propagates the id', function() {
         var result = setOne.difference(setTwo);
-        expect(result.values.map(function (value) {
-          return value.v;
-        })).to.deep.equal(['delta', 'beta']);
-      });
-    });
-  });
-
-  describe('#subtract', function () {
-    var setOne, setTwo, diff1, diff2;
-
-    beforeEach(function () {
-      setOne = new FastOrderedSet([1,2,3]);
-      setTwo = new FastOrderedSet([1,2,3,4]);
-      diff1 = setOne.subtract(setTwo);
-      diff2 = setTwo.subtract(setOne);
-    });
-
-    it('returns a FastOrderedSet', function() {
-      expect(diff1 instanceof FastOrderedSet).to.be.true;
-    });
-
-    it('returns the difference between the sets', function() {
-      expect(diff1.size).to.be.eql(0);
-      expect(diff2.size).to.be.eql(1);
-      expect(diff2.values).to.be.eql([4]);
-    });
-
-    it('is NOT commutative', function() {
-      expect(diff1.values).to.not.be.eql(diff2.values);
-    });
-
-    describe('the subtraction between two identical sets', function() {
-      var setThree, setFour, diff3;
-
-      beforeEach(function() {
-        setThree = new FastOrderedSet(['a','b','c']);
-        setFour = new FastOrderedSet(['b','c','a']);
-        diff3 = setThree.subtract(setFour);
-      });
-
-      it('returns a FastOrderedSet', function() {
-        expect(diff3 instanceof FastOrderedSet).to.be.true;
-      });
-
-      it('has size() of zero', function() {
-        expect(diff3.size).to.be.eql(0);
-      });
-    });
-
-    describe('using a custom id', function() {
-      beforeEach( function() {
-        setOne = new FastOrderedSet([{myId: 1, v: 'alpha'}, {myId: 2, v: 'beta'}], 'myId');
-        setTwo = new FastOrderedSet([{myId: 1, v: 'charlie'}, {myId: 3, v: 'delta'}], 'myId');
-      });
-
-      it('propagates the id', function() {
-        var result = setOne.subtract(setTwo);
         expect(result.values.map(function (value) {
           return value.v;
         })).to.deep.equal(['beta']);
