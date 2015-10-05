@@ -127,11 +127,6 @@ describe('FastOrderedSet', function() {
   describe('#union', function() {
     var setOne, setTwo;
 
-    beforeEach(function () {
-      setOne = new FastOrderedSet([1,2,3,4]);
-      setTwo = new FastOrderedSet([3,4,5,6]);
-    });
-
     describe('union of two overlapping sets', function() {
 
       var setOne, setTwo, union, union2;
@@ -179,10 +174,22 @@ describe('FastOrderedSet', function() {
         });
       });
     });
+
+    describe('using a custom id', function() {
+      beforeEach( function() {
+        setOne = new FastOrderedSet([{myId: 1, v: 'alpha'}, {myId: 2, v: 'beta'}], 'myId');
+        setTwo = new FastOrderedSet([{myId: 1, v: 'charlie'}, {myId: 3, v: 'delta'}], 'myId');
+      });
+
+      it('propagates the id', function() {
+        var result = setOne.union(setTwo);
+        expect(result.size).to.eq(3);
+      });
+    });
   });
 
   describe('#intersection', function() {
-    var setOne, setTwo;
+    var setOne, setTwo, setThree;
 
     beforeEach(function () {
       setOne = new FastOrderedSet([1,2,3,4]);
@@ -253,6 +260,19 @@ describe('FastOrderedSet', function() {
         expect(intersection.size).to.be.eql(0);
       });
     });
+
+    describe('using a custom id', function() {
+      beforeEach( function() {
+        setOne = new FastOrderedSet([{myId: 1, v: 'alpha'}, {myId: 2, v: 'beta'}], 'myId');
+        setTwo = new FastOrderedSet([{myId: 1, v: 'charlie'}, {myId: 3, v: 'delta'}], 'myId');
+        setThree = new FastOrderedSet([{myId: 1, v: 'echo'}, {myId: 3, v: 'gamma'}], 'myId');
+      });
+
+      it('propagates the id', function() {
+        var result = setOne.intersection(setTwo).intersection(setThree);
+        expect(result.size).to.eq(1);
+      });
+    });
   });
 
   describe('#difference', function () {
@@ -293,6 +313,20 @@ describe('FastOrderedSet', function() {
 
       it('has size() of zero', function() {
         expect(diff3.size).to.be.eql(0);
+      });
+    });
+
+    describe('using a custom id', function() {
+      beforeEach( function() {
+        setOne = new FastOrderedSet([{myId: 1, v: 'alpha'}, {myId: 2, v: 'beta'}], 'myId');
+        setTwo = new FastOrderedSet([{myId: 1, v: 'charlie'}, {myId: 3, v: 'delta'}], 'myId');
+      });
+
+      it('propagates the id', function() {
+        var result = setOne.difference(setTwo);
+        expect(result.values.map(function (value) {
+          return value.v;
+        })).to.deep.equal(['delta', 'beta']);
       });
     });
   });
@@ -336,6 +370,20 @@ describe('FastOrderedSet', function() {
 
       it('has size() of zero', function() {
         expect(diff3.size).to.be.eql(0);
+      });
+    });
+
+    describe('using a custom id', function() {
+      beforeEach( function() {
+        setOne = new FastOrderedSet([{myId: 1, v: 'alpha'}, {myId: 2, v: 'beta'}], 'myId');
+        setTwo = new FastOrderedSet([{myId: 1, v: 'charlie'}, {myId: 3, v: 'delta'}], 'myId');
+      });
+
+      it('propagates the id', function() {
+        var result = setOne.subtract(setTwo);
+        expect(result.values.map(function (value) {
+          return value.v;
+        })).to.deep.equal(['beta']);
       });
     });
   });

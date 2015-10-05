@@ -52,7 +52,7 @@ Set.prototype.has = function(obj) {
 };
 
 Set.prototype.intersection = function(set) {
-  var result = new this.constructor();
+  var result = new this.constructor(null, this.__id__);
 
   for (var i = 0; i < set.values.length ; i++) {
     var entry = set.values[i];
@@ -77,11 +77,17 @@ Set.prototype.add = function(obj) {
 
 Set.prototype.delete = function(obj) {
   var id = this._getId(obj);
+  var i;
 
   if (this.has(obj, id)) {
-    var index = this.values.indexOf(obj);
+    for (i=0; i<this.values.length; ++i) {
+      if (id === this._getId(this.values[i])) {
+        break;
+      }
+    }
+
     this.size--;
-    this.values.splice(index, 1);
+    this.values.splice(i, 1);
     delete this.map[id];
   }
 
@@ -89,7 +95,7 @@ Set.prototype.delete = function(obj) {
 };
 
 Set.prototype.union = function(set) {
-  return new this.constructor(this.values.concat(set.values));
+  return new this.constructor(this.values.concat(set.values), this.__id__);
 };
 
 Set.prototype.deleteAll = function (values) {
@@ -100,7 +106,7 @@ Set.prototype.deleteAll = function (values) {
 
 Set.prototype.difference = function (values) {
   var input = values instanceof this.constructor ? values.values.slice() : values;
-  var result = new this.constructor(input);
+  var result = new this.constructor(input, this.__id__);
   for (var i = 0; i < this.values.length; i++) {
     var entry = this.values[i];
     if (result.has(entry)) {
@@ -113,7 +119,7 @@ Set.prototype.difference = function (values) {
 };
 
 Set.prototype.subtract = function (values) {
-  var result = new this.constructor(this.values.slice());
+  var result = new this.constructor(this.values.slice(), this.__id__);
   result.deleteAll(values);
   return result;
 };
