@@ -1,6 +1,6 @@
 {
   "name": "fast-ordered-set",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "quick and dirty ordered-set",
   "main": "index.js",
   "scripts": {
@@ -10,6 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "abstract-set": "0.0.5",
+    "chai": "^3.3.0",
     "do-you-even-bench": "^1.0.1",
     "ordered-set": "^1.0.0",
     "set": "^1.1.1",
