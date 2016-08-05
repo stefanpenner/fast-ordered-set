@@ -3,6 +3,9 @@
   "version": "1.0.2",
   "description": "quick and dirty ordered-set",
   "main": "index.js",
+  "files": [
+    "index.js"
+  ],
   "scripts": {
     "test": "mocha test"
   },
