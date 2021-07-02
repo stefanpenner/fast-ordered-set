@@ -9,6 +9,10 @@
   "scripts": {
     "test": "mocha test"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stefanpenner/fast-ordered-set.git"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
